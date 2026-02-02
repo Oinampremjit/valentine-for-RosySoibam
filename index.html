@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rosy Soibam 💕 Will You Be My Valentine?</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: "Comic Sans MS", cursive;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Flying hearts */
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      animation: floatHeart linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatHeart {
+      0% { transform: translateY(100vh) scale(1); opacity: 1; }
+      100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-width: 450px;
+      width: 90%;
+      z-index: 1;
+    }
+
+    h1 { color: #ff4d6d; }
+    p { font-size: 18px; }
+
+    button {
+      padding: 12px 22px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.3s;
+    }
+
+    #yesBtn { background: #ff4d6d; color: white; }
+    #noBtn { background: #ddd; color: #333; }
+
+    #giftSection, #quizSection { display: none; margin-top: 20px; }
+
+    #giftText, #quizQuestion, #quizResult {
+      font-size: 20px;
+      margin: 20px 0;
+      color: #e63946;
+    }
+
+    .nextBtn { background: #ff4d6d; color: white; }
+    .quizOption {
+      display: block;
+      margin: 8px 0;
+      padding: 8px 15px;
+      border-radius: 10px;
+      background: #ffccd5;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .quizOption:hover { background: #ff4d6d; color: white; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Rosy Soibam 💕</h1>
+    <p>Will you be my Valentine?</p>
+
+    <button id="yesBtn">YES 💖</button>
+    <button id="noBtn">NO 🙈</button>
+
+    <div id="giftSection">
+      <h2>Choose your gifts, Rosy 💝</h2>
+      <div id="giftText"></div>
+      <button class="nextBtn" onclick="nextGift()">Next Gift 🎁</button>
+    </div>
+
+    <div id="quizSection">
+      <h2>Mini Quiz 🎮</h2>
+      <div id="quizQuestion"></div>
+      <div id="quizOptions"></div>
+      <div id="quizResult"></div>
+    </div>
+  </div>
+
+  <script>
+    // Flying hearts animation
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerText = "💕";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.fontSize = (12 + Math.random() * 24) + "px";
+      heart.style.animationDuration = (3 + Math.random() * 5) + "s";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 8000);
+    }
+    setInterval(createHeart, 300);
+
+    // Playful NO button messages
+    const noBtn = document.getElementById("noBtn");
+    const noMessages = [
+      "Nice try!",
+      "Ahh! Please say YES 😢",
+      "Catch me faster!",
+      "You can't catch me!",
+      "Oops too close 😆"
+    ];
+    let noIndex = 0;
+
+    noBtn.addEventListener("click", () => {
+      alert(noMessages[noIndex]);
+      noIndex = (noIndex + 1) % noMessages.length;
+    });
+
+    // Gifts section
+    const gifts = [
+      "🤗 A warm hug just for you",
+      "💌 Lots of love and kisses",
+      "🍫 Your favorite chocolate",
+      "🌹 A beautiful rose",
+      "🤗 Another tight hug because one is never enough"
+    ];
+    let giftIndex = 0;
+
+    document.getElementById("yesBtn").addEventListener("click", () => {
+      document.querySelector("p").innerText = "You just made my heart the happiest ❤️🥹";
+      document.getElementById("giftSection").style.display = "block";
+      document.getElementById("giftText").innerText = gifts[giftIndex];
+    });
+
+    function nextGift() {
+      giftIndex++;
+      if (giftIndex < gifts.length) {
+        document.getElementById("giftText").innerText = gifts[giftIndex];
+      } else {
+        document.getElementById("giftText").innerText = "Happy Valentine’s Day, Rosy 🌹❤️";
+        document.getElementById("giftSection").style.display = "none";
+        startQuiz(); // start quiz after gifts
+      }
+    }
+
+    // Mini quiz/game
+    const quiz = [
+      {
+        question: "What is my favorite color?",
+        options: ["Red ❤️", "Blue 💙", "Pink 💖", "Green 💚"],
+        answer: 2
+      },
+      {
+        question: "Which dessert do I love the most?",
+        options: ["Chocolate 🍫", "Ice cream 🍨", "Cake 🎂", "Cookies 🍪"],
+        answer: 0
+      },
+      {
+        question: "How many hugs do I want today?",
+        options: ["1", "2", "3+", "None 😢"],
+        answer: 2
+      }
+    ];
+    let quizIndex = 0;
+
+    function startQuiz() {
+      document.getElementById("quizSection").style.display = "block";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quiz[quizIndex];
+      document.getElementById("quizQuestion").innerText = q.question;
+      const optionsDiv = document.getElementById("quizOptions");
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.classList.add("quizOption");
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(i);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById("quizResult").innerText = "";
+    }
+
+    function checkAnswer(selected) {
+      const q = quiz[quizIndex];
+      if (selected === q.answer) {
+        document.getElementById("quizResult").innerText = "Correct! 🎉";
+      } else {
+        document.getElementById("quizResult").innerText = "Oops! Try next one 😉";
+      }
+
+      quizIndex++;
+      if (quizIndex < quiz.length) {
+        setTimeout(showQuestion, 1000);
+      } else {
+        setTimeout(() => {
+          document.getElementById("quizSection").innerHTML = "🎉 You finished the quiz! Final hugs and love 💕🤗";
+        }, 1000);
+      }
+    }
+  </script>
+
+</body>
+</html>
